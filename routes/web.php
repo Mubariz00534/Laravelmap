@@ -27,6 +27,10 @@ Route::get('/leafletmap', function () {
     return view('leafletmap');
 });
 
+Route::get('/openlayersmap', function () {
+    return view('openlayersmap');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
