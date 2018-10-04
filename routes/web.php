@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/googlemap', function () {
-    return view('googleMaps');
+Route::get('/mapDeneme2', function () {
+    return view('googleMapsGeocoder');
 });
 
 Route::get('/othermap', function () {
