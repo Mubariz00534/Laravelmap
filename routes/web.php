@@ -31,6 +31,10 @@ Route::get('/openlayersmap', function () {
     return view('openlayersmap');
 });
 
+Route::get('/mapDeneme1', function () {
+    return view('googlemapsplatform');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
