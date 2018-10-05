@@ -40,24 +40,46 @@
         padding: 5px;
         border: 1px solid #999;
       }
+      #floating-panel3 {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        margin-left: -180px;
+        width: 350px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+      }
     </style>
   </head>
   <body>
-    <div id="floating-panel">
+    <div class="col-md-4" id="floating-panel">
       <input id="address" type="textbox" value="City Point, Baku">
       <input id="submitByName" type="button" value="Search">
     </div>
-    <div id="floating-panel2">
-      <input id="latlng" type="text" value="40.4093, 49.8671">
-      <input id="submitByLatLng" type="button" value="Reverse Geocode">
+    <!-- <div class="col-md-10">
+      <div class="col-md-4" id="floating-panel2">
+        <input id="latlng" type="text" value="40.4093, 49.8671">
+        <input id="submitByLatLng" type="button" value="Reverse Geocode">
+      </div>
+    </div> -->
+    <div class="col-md-4" id="floating-panel3">
+      <input id="startPoint" type="text" value="City Point, Baku">
+      <input id="endPoint" type="text" value="Hazi Aslanov, Baku">
+      <input id="submitStartEndPoints" type="button" value="Search">
     </div>
     <div id="map"></div>
     <script>
       function initMap() {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 8,
           center: {lat: 40.4093, lng: 49.8671}
         });
+        directionsDisplay.setMap(map);
+
         var geocoder = new google.maps.Geocoder();
         var infowindow = new google.maps.InfoWindow();
 
@@ -65,9 +87,13 @@
           geocodeAddress(geocoder, map);
         });
 
-        document.getElementById('submitByLatLng').addEventListener('click', function() {
-          geocodeLatAndLng(geocoder, map, infowindow);
-        });
+        document.getElementById('submitStartEndPoints').addEventListener('click', function() {
+          displayRouteStartAndEnd(directionsService, directionsDisplay);
+        })
+
+        // document.getElementById('submitByLatLng').addEventListener('click', function() {
+        //   geocodeLatAndLng(geocoder, map, infowindow);
+        // });
       }
 
       function geocodeAddress(geocoder, resultsMap, infowindow) {
@@ -79,10 +105,24 @@
               map: resultsMap,
               position: results[0].geometry.location
             });
-            infowindow.setContent(result[0].formatted_address);
+            infowindow.setContent(results[0].formatted_address);
             infowindow.open(map, marker);
           } else {
             alert('Geocode error for this reason: ' + status);
+          }
+        });
+      }
+
+      function displayRouteStartAndEnd(directionsService, directionsDisplay) {
+        directionsService.route({
+          origin: document.getElementById('startPoint').value,
+          destination: document.getElementById('endPoint').value,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Error status: ' + status);
           }
         });
       }
